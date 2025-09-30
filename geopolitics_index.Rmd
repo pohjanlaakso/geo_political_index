@@ -1,0 +1,39 @@
+---
+title: "Geopolitical Index"
+author: "Pohjanlaakso"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## mise en place
+``` {r, echo=FALSE}
+rm(list =ls())
+setwd('C:/Users/03149822/Desktop/geo_political_index')
+```
+
+## libraries
+```{r, echo=FALSE}
+library(zoo)
+```
+
+```{r, echo=FALSE}
+url <- 'https://pxweb.asub.ax:443/PXWeb/sq/c54bb1cd-385e-4b73-843a-10cb5bd7c859'
+download.file(url, paste('C:/Users/03149822/Desktop/', 'baltic_dry_index.txt', sep = ''), mode = 'wb')
+baltic <- read.delim('C:/Users/03149822/Desktop/baltic_dry_index.txt', header = T, sep = '\t', dec = '.')
+sapply(baltic, class)
+```
+
+```{r, echo=FALSE}
+plot.ts(baltic$Index.of.international.dry.bulk.freight..Baltic.Dry.Index..1985...1.000., xaxt = 'n', ylab = '',
+        main = 'Average price paid for transport \n of dry bulk material for >20 shipping routes')
+lines(rollmean(baltic$Index.of.international.dry.bulk.freight..Baltic.Dry.Index..1985...1.000., 
+               k = 12, fill = NA, align = 'right'), col = 'red')
+legend('topleft', legend=c('Index', '12M Moving Average'), col = 1:2, lty = 1)
+axis(1, at = seq(1, 14*12, by = 12), labels = 2011:2024)
+
+```
